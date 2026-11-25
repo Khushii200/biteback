@@ -354,10 +354,13 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 const TAGS=['Too oily','Needs more flavour','Perfectly cooked','Too spicy','Great portion','Too sweet'];
 const STAR_LABEL=['','Not for me','Could be better','It was okay','Pretty good','Absolutely loved it'];
 const MEALS=['Breakfast','Lunch','Dinner'];
-const MEAL_TIME={Breakfast:'8:00 AM',Lunch:'12:30 PM',Dinner:'7:30 PM'};
+const MEAL_TIME={Breakfast:'7:30 AM',Lunch:'11:30 AM',Dinner:'7:30 PM'};
 const SH=(()=>{const n=new Date();return Math.round((Date.UTC(n.getFullYear(),n.getMonth(),n.getDate())-Date.UTC(2025,10,20))/864e5)})();
 const sh=iso=>{const[y,m,d]=iso.split('-').map(Number);return new Date(Date.UTC(y,m-1,d+SH)).toISOString().slice(0,10)};
-const SMEAL=(h=>h<11?'Breakfast':h<16?'Lunch':'Dinner')(new Date().getHours());
+// Lunch runs 11:30 AM to 3:00 PM. Outside that window the phone starts at a random time during lunch and ticks forward in real time.
+const SMEAL='Lunch';
+const OFFSET=(()=>{const n=new Date(),m=n.getHours()*60+n.getMinutes();if(m>=690&&m<900)return 0;const target=735+Math.floor(Math.random()*121);return ((target-m)*60-n.getSeconds())*1000})();
+const simNow=()=>new Date(Date.now()+OFFSET);
 const TODAY=sh('2025-11-20');
 // id, name, category, usual meal, icon, ratings, average, repeat share, tag counts in TAGS order
 const DISHES=[
@@ -664,9 +667,9 @@ const ml=SMEAL.toLowerCase();
 const VOTES_BY={Breakfast:{idli:121,poha:41},Lunch:{pbm:148,dal:34,chapati:28,raita:23,jeera:19},Dinner:{pulao:131,chole:62,paratha:57}};
 const LIVE=()=>{const t=S.story,scan=t.step>0?1:0,rated=t.stars?1:0,named=t.dish?1:0;return {scan:683+scan,prompted:640+scan,rated:312+rated,named:252+named,paused:43}};
 const votes=()=>{const t=S.story,v={...VOTES_BY[SMEAL]};if(t.dish&&t.stars>=3)v[t.dish]=(v[t.dish]||0)+1;return Object.entries(v).sort((a,b)=>b[1]-a[1])};
-const clock=()=>{const d=new Date();return (d.getHours()%12||12)+':'+String(d.getMinutes()).padStart(2,'0')};
-const clockAP=()=>clock()+(new Date().getHours()<12?' AM':' PM');
-const lockDate=()=>{const d=new Date();return `${DAYN[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}`};
+const clock=()=>{const d=simNow();return (d.getHours()%12||12)+':'+String(d.getMinutes()).padStart(2,'0')};
+const clockAP=()=>clock()+(simNow().getHours()<12?' AM':' PM');
+const lockDate=()=>{const d=simNow();return `${DAYN[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}`};
 const LOGO_W=`<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 2a14 14 0 1 0 14 14 5 5 0 0 1-5.2-4.6 5 5 0 0 1-5.4-5A5 5 0 0 1 16 2Z"/></svg>`;
 const nHead=(w='now')=>`<div class="nhead"><span class="nlogo">${LOGO_W}</span><b>BITEBACK</b><span>via My Flame</span><span class="nt">${w}</span></div>`;
 const SB=(showTime=true)=>`<div class="sbar"><span data-clock="${showTime?1:0}">${showTime?clock():''}</span><span class="isl"></span><span class="si" aria-hidden="true"><svg viewBox="0 0 18 12" width="17" height="11"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="10" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg><svg viewBox="0 0 16 12" width="15" height="11"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0ZM2.8 6.3a7.4 7.4 0 0 1 10.4 0l-1.4 1.4a5.4 5.4 0 0 0-7.6 0ZM0 3.5a11.3 11.3 0 0 1 16 0l-1.4 1.4a9.3 9.3 0 0 0-13.2 0Z" fill="currentColor"/></svg><svg viewBox="0 0 27 13" width="25" height="12"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="15" height="8" rx="2" fill="currentColor"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div>`;
