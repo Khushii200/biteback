@@ -9,13 +9,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@500;700&display=swap">
 <style>
-/* Layout concept: a phone app and a desktop console share one data store. The recurring mark is a "bite" taken out of a card corner. */
+/* Layout concept: a phone app and a desktop console share one data store. One electric blue carries the system; navy adds depth; tints set state. */
 :root{
   color-scheme:light;
-  --warm:#F5F3EE;--cobalt:#293B64;--peri:#A9B9D8;--lav:#D6C9E8;--sand:#E8D7B9;--ink:#25272D;--white:#FFFFFF;
-  --muted:#5A5F70;--line:#E3DFD6;--peri-soft:#E4E9F3;--lav-soft:#EFE9F6;--sand-soft:#F5ECDD;--cobalt-2:#3A5088;
+  --warm:#F5F6FA;--cobalt:#2E55E8;--navy:#1A2556;--peri:#C9D3F5;--lav:#DCE3FA;--sand:#DCE3FA;--ink:#1A1F3C;--white:#FFFFFF;
+  --muted:#6B7390;--line:#E3E7F2;--peri-soft:#E6ECFB;--lav-soft:#EEF1FC;--sand-soft:#EEF1FC;--cobalt-2:#2546C4;--navicon:#7A819B;
   --head:"Space Grotesk","Avenir Next",system-ui,sans-serif;--body:"DM Sans","Helvetica Neue",system-ui,sans-serif;
-  --r-lg:22px;--r-md:14px;--r-sm:10px;--shadow:0 1px 2px rgba(41,59,100,.07),0 6px 18px rgba(41,59,100,.06);
+  --r-lg:26px;--r-md:18px;--r-sm:12px;--shadow:0 1px 2px rgba(26,37,86,.05),0 8px 22px rgba(26,37,86,.06);
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -60,7 +60,7 @@ main{flex:1;min-height:0;overflow:hidden}
 .scroll::-webkit-scrollbar{display:none}
 .tabs{flex:none;display:grid;grid-template-columns:repeat(4,1fr);background:var(--white);border-top:1px solid var(--line);padding:7px 6px calc(9px + env(safe-area-inset-bottom,0px))}
 .tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:12px;color:var(--muted);font-size:11.5px;font-weight:500;min-height:48px}
-.tabs button[aria-current=page]{color:var(--cobalt);background:var(--peri-soft);font-weight:700}
+.tabs button{position:relative;color:var(--navicon)}.tabs button[aria-current=page]{color:var(--cobalt);font-weight:700}.tabs button[aria-current=page]::before{content:"";position:absolute;top:-7px;left:50%;width:24px;height:3px;margin-left:-12px;border-radius:0 0 3px 3px;background:var(--cobalt)}
 
 .apphead{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .iconbtn{width:42px;height:42px;border-radius:50%;background:var(--white);border:1px solid var(--line);display:grid;place-items:center;position:relative;color:var(--cobalt);flex:none}
@@ -89,7 +89,7 @@ main{flex:1;min-height:0;overflow:hidden}
 .dish:first-child{border-top:0}
 .dishmain{display:flex;align-items:center;gap:10px;flex:1;min-width:0;min-height:44px}
 .dishmain b{display:block;font-weight:600;line-height:1.2}
-.thumb{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--cobalt);background:var(--peri-soft);flex:none}
+.thumb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--cobalt);background:var(--peri-soft);flex:none;font:700 14px/1 var(--head);letter-spacing:.02em}
 .thumb.Breakfast{background:var(--sand-soft)}.thumb.Dinner{background:var(--lav-soft)}
 .pillbtn{padding:8px 13px;border-radius:999px;background:var(--cobalt);color:#fff;font-weight:600;font-size:13px;white-space:nowrap;min-height:36px}
 .ghost{padding:8px 11px;border-radius:999px;border:1px solid var(--line);font-weight:600;font-size:12.5px;color:var(--cobalt);white-space:nowrap;background:var(--white)}
@@ -182,7 +182,7 @@ textarea,.txt{width:100%;border:1.5px solid var(--line);background:var(--white);
 
 /* Dashboard */
 .dash{height:100%;display:flex;background:var(--warm);overflow:hidden}
-.side{width:224px;flex:none;background:var(--cobalt);color:#fff;padding:18px 12px;display:flex;flex-direction:column;gap:3px}
+.side{width:224px;flex:none;background:var(--navy);color:#fff;padding:18px 12px;display:flex;flex-direction:column;gap:3px}
 .side .lbl{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#C5D0E6;font-weight:700;padding:0 10px 10px}
 .side button{display:flex;gap:10px;align-items:center;padding:10px;border-radius:var(--r-sm);font-weight:500;color:#E6EBF5;white-space:nowrap}
 .side button:hover{background:rgba(255,255,255,.09)}
@@ -229,7 +229,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
-.lock{background:#293B64;color:#fff}
+.lock{background:var(--navy);color:#fff}
 .wall{position:absolute;inset:0;pointer-events:none;background:
   radial-gradient(circle at calc(100% + 30px) 330px,rgba(169,185,216,.2) 0 140px,transparent 141px),
   radial-gradient(circle at -10px calc(100% - 40px),rgba(214,201,232,.18) 0 190px,transparent 191px),
@@ -337,11 +337,49 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 @media (max-width:640px){#stepLbl .nm{display:none}}
 @media (max-width:520px){.stage{padding:0}.phone{aspect-ratio:auto;width:100%;height:100%;border:0;border-radius:0;box-shadow:none}.banner{top:calc(8px + env(safe-area-inset-top,0px))}.sbar{display:none}.lockbody{padding-top:22px}.seg .lg{display:none}.stepper{gap:5px}.roundbtn{width:32px;height:32px}}
 @media (prefers-reduced-motion:reduce){.ncard,.live,.kiosk{animation:none}.fp::after{animation:none;opacity:.5}}
+
+/* Blue design language */
+.scroll>*{flex-shrink:0}
+.status.watch{background:#FDEFD9;color:#7A4A12}
+.hero .sub,.bigcard .pair span{color:#DCE3FA}
+.wall{background:radial-gradient(circle at calc(100% + 30px) 330px,rgba(46,85,232,.38) 0 140px,transparent 141px),radial-gradient(circle at -10px calc(100% - 40px),rgba(46,85,232,.24) 0 190px,transparent 191px),radial-gradient(circle at 62% calc(100% + 70px),rgba(201,211,245,.12) 0 130px,transparent 131px)}
+.hero2{position:relative;overflow:hidden;margin:-16px -16px 0;padding:18px 20px 34px;background:var(--cobalt);color:#fff;border-radius:0 0 64px 0;display:grid;gap:4px}
+.hdeco{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at calc(100% - 30px) 34px,transparent 0 46px,rgba(255,255,255,.16) 47px 48.5px,transparent 50px 78px,rgba(255,255,255,.12) 79px 80.5px,transparent 82px 112px,rgba(255,255,255,.09) 113px 114.5px,transparent 116px)}
+.hstar{position:absolute;right:20px;top:20px;width:28px;height:28px;opacity:.28}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;padding-right:40px}
+.hero2 .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.hero2 h1{font-size:40px;line-height:1.05;letter-spacing:-.03em;position:relative;margin-top:10px}
+.hero2 p{color:rgba(255,255,255,.82);position:relative}
+.hero2 .iconbtn{background:rgba(255,255,255,.16);border:0;color:#fff;position:absolute;right:-6px;top:50%;margin-top:-21px}
+.hero2 .badge{background:#fff;color:var(--cobalt)}
+.bigh{font-size:30px!important;letter-spacing:-.03em}
+.seg2{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--white);border:1px solid var(--line);border-radius:16px;padding:4px;box-shadow:0 2px 10px rgba(26,37,86,.06)}
+.seg2 button{display:grid;justify-items:center;padding:8px 4px;border-radius:12px;font-weight:600;font-size:14px;color:var(--ink)}
+.seg2 button small{font-size:11px;font-weight:500;color:var(--muted)}
+.seg2 button[aria-selected=true]{background:var(--cobalt);color:#fff}
+.seg2 button[aria-selected=true] small{color:rgba(255,255,255,.8)}
+.feat{display:flex;align-items:center;gap:12px;width:100%;background:var(--navy);color:#fff;border-radius:24px;padding:16px;text-align:left}
+.feat .thumb{background:var(--peri);color:var(--navy);width:48px;height:48px;font-size:15px}
+.feat .eyebrow{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#AFC0F5}
+.feat b{display:block;font:700 19px/1.2 var(--head);margin:2px 0 3px}
+.feat .small{color:#C9D3F5}.feat .stars{color:#fff}.feat .stars .off{color:rgba(255,255,255,.3)}
+.fscore{background:#fff;color:var(--navy);font:700 17px var(--head);padding:8px 11px;border-radius:14px;font-variant-numeric:tabular-nums}
+.mlist{background:var(--white);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+.mrow{display:flex;width:100%;align-items:center;gap:12px;padding:13px 14px;border-top:1px solid var(--line);text-align:left}
+.mrow:first-child{border-top:0}
+.mrow b{display:block;font-weight:600;font-size:15.5px;line-height:1.25}
+.rchip{background:var(--peri-soft);color:var(--cobalt);font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;padding:9px 12px;border-radius:12px;white-space:nowrap}
+.schip{display:inline-flex;align-items:center;gap:4px;background:var(--cobalt);color:#fff;font:700 14px var(--head);padding:8px 11px;border-radius:12px}
+.schip svg{width:13px;height:13px}
+.lockchip{color:var(--navicon)}
+.lunchdone{background:var(--peri-soft);border:1px solid var(--peri)}
+.stat{border-radius:20px}
+.card{border-radius:20px}
 </style>
 
 <div class="shell">
   <header class="topbar">
-    <div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path fill="#293B64" d="M16 2a14 14 0 1 0 14 14 5 5 0 0 1-5.2-4.6 5 5 0 0 1-5.4-5A5 5 0 0 1 16 2Z"/><circle cx="12" cy="17" r="3" fill="#E8D7B9"/></svg><span>BITEBACK</span></div>
+    <div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path fill="#2E55E8" d="M16 2a14 14 0 1 0 14 14 5 5 0 0 1-5.2-4.6 5 5 0 0 1-5.4-5A5 5 0 0 1 16 2Z"/><circle cx="12" cy="17" r="3" fill="#C9D3F5"/></svg><span>BITEBACK</span></div>
     <div class="seg" role="group" aria-label="Choose interface" id="modeSeg"></div>
     
   </header>
@@ -425,7 +463,8 @@ const STAR='M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4
 const star=(fill=true)=>`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${STAR}" fill="${fill?'currentColor':'none'}" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
 const stars=n=>`<span class="stars" role="img" aria-label="${n} out of 5 stars">${[1,2,3,4,5].map(i=>`<span class="${i<=n?'':'off'}">${star(i<=n)}</span>`).join('')}</span>`;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const thumb=(d,m='')=>`<span class="thumb ${m}">${ico(D[d].icon)}</span>`;
+const initials=d=>D[d].name.split(/[\s-]+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+const thumb=(d,m='')=>`<span class="thumb ${m}">${initials(d)}</span>`;
 const DAYN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const dt=i=>{const[y,m,d]=i.split('-').map(Number);return new Date(Date.UTC(y,m-1,d))};
@@ -486,15 +525,22 @@ function mealCard(m){
   return `<section class="meal ${m}">${served(m)&&next?`<button class="mealhead" data-a="rate" data-v="${m}|${next}" aria-label="${m}: rate next dish, ${D[next].name}">${hd}</button>`:`<div class="mealhead">${hd}</div>`}<div class="dishes">${ids.map(d=>dishRow(d,m)).join('')}</div></section>`;
 }
 function home(){
-  const avail=MEALS.filter(served).flatMap(m=>MENU[m].map(d=>[m,d])),done=avail.filter(([m,d])=>todayRec(d,m)).length,st=myStats(),ins=insights()[0],n=notifications().up[0];
+  const st=myStats(),ins=insights()[0],n=notifications().up[0],m=ui.homeMeal||SMEAL,ids=MENU[m];
   const line=ins?(ins.t.includes('paneer')?"You've been enjoying paneer dishes lately.":ins.t+'.'):'Rate a few more dishes to unlock your first insight.';
-  return `<div class="apphead"><div class="pagehead"><h1>Hey, ${esc(S.name)}!</h1><p>What's on your plate today?</p></div>${bell()}</div>
+  const feat=[...ids].sort((a,b)=>agg(b).avg-agg(a).avg)[0],rest=ids.filter(d=>d!==feat);
+  const action=(id)=>{const r=todayRec(id,m);if(r)return `<span class="schip">${star(true)}${r.s}</span>`;if(!served(m))return `<span class="lockchip">${ico('lock')}</span>`;return `<span class="rchip">Rate ›</span>`};
+  const hint=(id)=>{const r=todayRec(id,m),last=latest(id);if(r)return `You rated it ${STAR_LABEL[r.s].toLowerCase()}`;if(!served(m))return m===SMEAL?'Unlocks after you check in':`Served from ${MEAL_TIME[m]}`;return last&&last.s>=4?`Last time: ${last.s}/5 · Tap after you've eaten`:"Tap after you've eaten"};
+  const row=(id)=>{const on=served(m);return on?`<button class="mrow" data-a="rate" data-v="${m}|${id}" aria-label="${todayRec(id,m)?'Edit rating for':'Rate'} ${D[id].name}">${thumb(id)}<span class="grow"><b>${D[id].name}</b><span class="small muted">${hint(id)}</span></span>${action(id)}</button>`:`<div class="mrow">${thumb(id)}<span class="grow"><b>${D[id].name}</b><span class="small muted">${hint(id)}</span></span>${action(id)}</div>`};
+  const fa=agg(feat),fr=todayRec(feat,m),fon=served(m);
+  return `<div class="hero2"><div class="hdeco" aria-hidden="true"></div><svg class="hstar" viewBox="0 0 24 24" aria-hidden="true"><path d="${STAR}" fill="#fff"/></svg>
+  <div class="hrow"><span class="eyebrow">${fmt(TODAY).replace(', ',' · ')}</span>${bell()}</div><h1>Hey, ${esc(S.name)}!</h1><p>What's on your plate today?</p></div>
   ${S.story.stars?`<div class="lunchdone"><span class="tk">${ico('check')}</span><div class="grow"><b>${SMEAL} rated from your lock screen</b><span class="small">${stars(S.story.stars)} at ${S.story.times.r}${S.story.dish?` · ${S.story.stars<=2?'Let down by':'Standout'}: ${D[S.story.dish].name}`:''}</span></div></div>`:''}
-  <div class="hero"><span class="eyebrow" style="color:var(--sand)">Today's menu</span><h1>${fmt(TODAY).replace(', ',',<br>')}</h1>
-  <div><div class="progress" role="progressbar" aria-valuenow="${done}" aria-valuemin="0" aria-valuemax="${avail.length}" aria-label="Dishes rated today"><span style="width:${avail.length?done/avail.length*100:0}%"></span></div><p class="sub small" style="margin-top:6px">${done} of ${avail.length} dishes rated. Rating each dish is optional.</p></div></div>
-  ${MEALS.map(mealCard).join('')}
+  <section class="section"><h2 class="bigh">Today's Menu</h2>
+  <div class="seg2" role="tablist" aria-label="Meals">${MEALS.map(x=>`<button role="tab" id="mt-${x}" aria-selected="${x===m}" data-a="homeMeal" data-v="${x}">${x}<small>${MEAL_TIME[x]}</small></button>`).join('')}</div>
+  <${fon?'button':'div'} class="feat" ${fon?`data-a="rate" data-v="${m}|${feat}"`:''}><span class="thumb">${initials(feat)}</span><span class="grow"><span class="eyebrow">Top rated by students</span><b>${fa.name}</b><span class="small">${stars(Math.round(fa.avg))} ${fr?`· You gave ${fr.s}/5`:fon?"· Tap after you've eaten":''}</span></span><span class="fscore">${f1(fa.avg)}</span></${fon?'button':'div'}>
+  <div class="mlist">${rest.map(row).join('')}</div></section>
   <section class="section"><h2>Your Taste, So Far</h2>
-  <div class="two"><button class="stat bg-pl" data-a="tab" data-v="taste"><span class="num">${st.dishes}</span><span>Dishes rated</span></button><button class="stat bg-lav" data-a="tab" data-v="taste"><span class="num">${st.favs}</span><span>Saved favourites</span></button></div>
+  <div class="two"><button class="stat bg-peri" data-a="tab" data-v="taste"><span class="num">${st.dishes}</span><span>Dishes rated</span></button><button class="stat bg-pl" data-a="tab" data-v="taste"><span class="num">${st.favs}</span><span>Saved favourites</span></button></div>
   <div class="card insight">${ico('spark')}<p>${line}</p></div>
   ${n?`<button class="comeback" data-a="dish" data-v="${n.d}|${n.date}|${n.meal}|${n.id}">${thumb(n.d)}<span class="grow"><span class="eyebrow">Coming back to your plate</span><b>${D[n.d].name}</b><span class="small">${fmt(n.date)} · ${n.meal}</span></span>${ico('chevron')}</button>`:''}
   </section>`;
@@ -590,7 +636,7 @@ function sheet(){
   return `<div class="sheetwrap" data-a="closeSheet"><div class="sheet" role="dialog" aria-modal="true" data-stop="1">${c}<button class="secondary" data-a="closeSheet">${ui.sheet==='logout'||ui.sheet==='edit'?'Cancel':'Close'}</button></div></div>`;
 }
 function appPhone(){
-  if(S.loggedOut)return `<div class="phone"><div class="authed"><svg style="width:60px;height:60px;margin-inline:auto" viewBox="0 0 32 32" aria-hidden="true"><path fill="#293B64" d="M16 2a14 14 0 1 0 14 14 5 5 0 0 1-5.2-4.6 5 5 0 0 1-5.4-5A5 5 0 0 1 16 2Z"/><circle cx="12" cy="17" r="3" fill="#E8D7B9"/></svg><h1 style="font-size:32px;color:var(--cobalt)">BITEBACK</h1><p class="muted">Your plate. Your opinion. Your call.</p><button class="primary" data-a="login">Log back in</button></div></div>`;
+  if(S.loggedOut)return `<div class="phone"><div class="authed"><svg style="width:60px;height:60px;margin-inline:auto" viewBox="0 0 32 32" aria-hidden="true"><path fill="#2E55E8" d="M16 2a14 14 0 1 0 14 14 5 5 0 0 1-5.2-4.6 5 5 0 0 1-5.4-5A5 5 0 0 1 16 2Z"/><circle cx="12" cy="17" r="3" fill="#C9D3F5"/></svg><h1 style="font-size:32px;color:var(--cobalt)">BITEBACK</h1><p class="muted">Your plate. Your opinion. Your call.</p><button class="primary" data-a="login">Log back in</button></div></div>`;
   const c=cur(),tabsOn=['home','taste','feedback','profile','notif','dish'].includes(c.s);
   const screens={home,taste,notif,dish:dishDetail,feedback,profile};
   const body=c.s==='rate'?rate():c.s==='done'?doneScr():`<div class="scroll" id="scr">${screens[c.s]()}</div>`;
@@ -614,9 +660,9 @@ function lineChart(){
   const ticks=[3.2,3.4,3.6,3.8,4,4.2],last=pts[pts.length-1];
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly average satisfaction rose from ${pts[0][1]} to ${last[1].toFixed(2)} over eight weeks" style="width:100%;height:auto">
   ${ticks.map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#ECE8E0"/><text x="${L-7}" y="${y(v)+4}" text-anchor="end">${v.toFixed(1)}</text>`).join('')}
-  <path d="${path} L${x(pts.length-1)} ${H-B} L${x(0)} ${H-B}Z" fill="#A9B9D8" fill-opacity=".28"/><path d="${path}" fill="none" stroke="#293B64" stroke-width="2"/>
+  <path d="${path} L${x(pts.length-1)} ${H-B} L${x(0)} ${H-B}Z" fill="#C9D3F5" fill-opacity=".45"/><path d="${path}" fill="none" stroke="#2E55E8" stroke-width="2"/>
   ${pts.map((p,i)=>`<text x="${x(i)}" y="${H-9}" text-anchor="${i===0?'start':i===pts.length-1?'end':'middle'}">${p[0]}</text>`).join('')}
-  <circle cx="${x(pts.length-1)}" cy="${y(last[1])}" r="5" fill="#293B64" stroke="#fff" stroke-width="2"/><text x="${x(pts.length-1)-9}" y="${y(last[1])-9}" text-anchor="end" style="font-weight:700;fill:#25272D">${last[1].toFixed(2)}</text>
+  <circle cx="${x(pts.length-1)}" cy="${y(last[1])}" r="5" fill="#2E55E8" stroke="#fff" stroke-width="2"/><text x="${x(pts.length-1)-9}" y="${y(last[1])-9}" text-anchor="end" style="font-weight:700;fill:#25272D">${last[1].toFixed(2)}</text>
   ${pts.map((p,i)=>`<rect x="${x(i)-(W-L-R)/(pts.length-1)/2}" y="0" width="${(W-L-R)/(pts.length-1)}" height="${H-B}" fill="transparent" data-tip="Week of ${p[0]}: ${p[1].toFixed(2)} / 5"/>`).join('')}</svg>`;
 }
 function dOverview(){
@@ -789,6 +835,7 @@ const tip=document.getElementById('tip');
 document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');if(!t){tip.hidden=true;return}tip.textContent=t.dataset.tip;tip.hidden=false;tip.style.left=Math.min(innerWidth-tip.offsetWidth-8,e.clientX+12)+'px';tip.style.top=Math.max(6,e.clientY-34)+'px'});
 window.addEventListener('hashchange',()=>{const m=location.hash==='#dashboard'?'dashboard':'student';if(m!==ui.mode){ui.mode=m;render(false)}});
 Object.assign(A,{
+  homeMeal:v=>{ui.homeMeal=v;render()},
   lockStar:v=>{const t=S.story;t.stars=+v;t.times.r=clockAP();t.step=3;save();render(false)},
   lockDish:v=>{commitDish(v);S.story.step=4;save();render(false);schedule()},
   lockSkip:()=>{S.story.skipDish=true;S.story.step=4;save();render(false);schedule()},
