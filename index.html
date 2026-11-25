@@ -375,6 +375,52 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .lunchdone{background:var(--peri-soft);border:1px solid var(--peri)}
 .stat{border-radius:20px}
 .card{border-radius:20px}
+
+/* Dashboard polish */
+.side{width:252px;padding:20px 14px;gap:4px}
+.sbrand{display:flex;gap:11px;align-items:center;padding:4px 8px 24px}
+.ltile{width:38px;height:38px;border-radius:12px;background:var(--cobalt);display:grid;place-items:center;flex:none}
+.ltile svg{width:22px;height:22px}
+.sbrand b{display:block;font:700 17px var(--head);letter-spacing:.05em}
+.sbrand small{display:block;color:#AFC0F5;font-size:12px}
+.side button{padding:11px 12px;border-radius:12px;color:#C9D3F5;font-weight:500}
+.side button:hover{background:rgba(255,255,255,.07)}
+.side button[aria-current=page]{background:var(--cobalt);color:#fff;font-weight:700}
+.side .note{margin-top:auto;display:flex;gap:9px;align-items:flex-start;background:rgba(255,255,255,.06);border-radius:16px;padding:12px;color:#C9D3F5;font-size:12px;line-height:1.45}
+.side .note .ic{width:18px;height:18px;flex:none;color:#AFC0F5}
+.dmain{padding:28px 32px 44px}
+.dinner{gap:20px}
+.dhead h1{font-size:30px;color:var(--ink);letter-spacing:-.02em}
+.dhead p{margin-top:3px}
+.dmeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.datepill{display:inline-flex;gap:6px;align-items:center;background:var(--white);border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:600}
+.datepill .ic{width:15px;height:15px;color:var(--cobalt)}
+.samplepill{background:var(--peri-soft);color:var(--cobalt);padding:6px 12px;font-size:12px}
+.kpis{gap:14px}
+.kpi{border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:2px}
+.khead{display:flex;gap:10px;align-items:center}
+.kico{width:34px;height:34px;border-radius:11px;background:var(--peri-soft);color:var(--cobalt);display:grid;place-items:center;flex:none}
+.kico .ic{width:18px;height:18px}
+.kpi.lead .kico{background:rgba(255,255,255,.18);color:#fff}
+.kpi .num{font-size:34px;margin-top:12px;letter-spacing:-.02em;color:var(--ink)}
+.kpi.lead .num{color:#fff}.kpi.lead small{color:#DCE3FA}
+.kpi .of{font-size:16px;color:var(--muted)}
+.kpi.txt-v .num{font-size:23px;line-height:1.35;margin-top:14px;color:var(--cobalt)}
+.panel{border-radius:22px;padding:20px;gap:12px}
+.panel h2{font-size:17px}
+th{text-transform:uppercase;letter-spacing:.06em;font-size:11px;padding:10px}
+td{border-bottom:1px solid var(--line);padding:10px}
+tbody tr:hover td{background:#F8F9FD}
+th button{text-transform:inherit;letter-spacing:inherit;font-size:inherit;color:inherit}th button[aria-sort]{color:var(--cobalt)}
+.dcell{display:flex;align-items:center;gap:10px}
+.dcell b{font-weight:600}
+.thumb.sm{width:30px;height:30px;font-size:11px}
+.barrow{grid-template-columns:minmax(0,140px) 1fr 48px;padding:5px 0}
+.track{height:8px;border-radius:4px}
+.track span{border-radius:4px}
+.track.warm span{background:#E08A2E}
+.dash select{border-radius:12px;padding:8px 10px;border-color:var(--line);background:var(--white)}
+@media (max-width:860px){.sbrand,.side .note{display:none}.side{width:100%;padding:8px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px))}.side button[aria-current=page]{background:var(--cobalt)}.dmain{padding:18px max(16px,env(safe-area-inset-right,0px)) 30px max(16px,env(safe-area-inset-left,0px))}.dhead h1{font-size:25px}.kpi .num{font-size:28px}}
 </style>
 
 <div class="shell">
@@ -645,6 +691,9 @@ function appPhone(){
   return `<div class="phone app">${ui.banner?`<button class="banner" data-a="toLock"><span class="nlogo">${LOGO_W}</span><span class="grow"><b>BITEBACK</b><span>${ui.banner}</span></span><span class="nt">now</span></button>`:''}${SB()}<div class="hostbar"><button class="iconbtn" data-a="toLock" aria-label="Back to lock screen">${ico('back')}</button><div class="ht"><small>My Flame</small><b>BITEBACK</b></div><span class="cpill">Concept</span></div>${body}${tabsOn?`<nav class="tabs" aria-label="Main">${nav.map(([s,i,l])=>`<button data-a="tab" data-v="${s}" ${active===s?'aria-current="page"':''}>${ico(i)}${l}</button>`).join('')}</nav>`:''}${sheet()}${ui.toast?`<div class="toast" role="status">${esc(ui.toast)}</div>`:''}</div>`;
 }
 /* ---------- Dashboard ---------- */
+const kpi=(icon,label,val,cap,cls='')=>`<div class="kpi ${cls}"><div class="khead"><span class="kico">${ico(icon)}</span><small>${label}</small></div><span class="num">${val}</span><small>${cap}</small></div>`;
+const dcell=id=>`<span class="dcell"><span class="thumb sm">${initials(id)}</span><b>${D[id].name}</b></span>`;
+const dmeta=()=>`<div class="dmeta"><span class="datepill">${ico('cal')}${fmtS(TODAY)}</span><span class="samplepill">Illustrative sample data</span></div>`;
 const DV=[['overview','grid','Overview'],['response','bell','Response'],['perf','bars','Dish Performance'],['prefs','taste','Student Preferences'],['trends','trend','Feedback Trends'],['plan','plan','Menu Planning']];
 const hbar=(l,v,max,txt,tip,cls='')=>`<div class="barrow" data-tip="${esc(tip||l+': '+txt)}"><span>${l}</span><span class="track ${cls}"><span style="width:${Math.max(0,v/max*100)}%"></span></span><span class="v">${txt}</span></div>`;
 function statusOf(d){return d.avg>=4&&d.repeat>=.7?['good','Repeat']:d.avg<3.5?['watch','Improve']:['ok','Monitor']}
@@ -667,28 +716,31 @@ function lineChart(){
 }
 function dOverview(){
   const t=totals(),a=allAgg(),base=[...a].sort((x,y)=>x.avg-y.avg),top=t.req[0];
-  return `<div class="dhead"><div><h1>Overview</h1><p class="muted">${fmt(TODAY)} · All data is anonymous and combined</p></div><span class="samplepill">Illustrative sample data</span></div>
-  <div class="kpis"><div class="kpi lead"><small>Total feedback submissions</small><span class="num">${t.n.toLocaleString('en-IN')}</span><small>This term</small></div><div class="kpi"><small>Average student satisfaction</small><span class="num">${t.avg.toFixed(2)}<span style="font-size:15px"> / 5</span></span><small>Weighted by ratings</small></div><div class="kpi"><small>Dishes rated</small><span class="num">${t.dishes}</span><small>Across 3 meals</small></div><div class="kpi txt-v"><small>Most requested repeat</small><span class="num">${top.name}</span><small>${top.yes} students said bring it back</small></div></div>
-  <div class="g2"><div class="panel"><h2>Satisfaction over time</h2>${lineChart()}</div><div class="panel"><h2>Needs attention first</h2><div class="tblwrap"><table style="min-width:400px"><thead><tr><th>Dish</th><th class="n">Avg</th><th>Top feedback</th><th>Suggested action</th></tr></thead><tbody>${base.slice(0,5).map(d=>`<tr><td><b style="font-weight:600">${d.name}</b></td><td class="n">${f1(d.avg)}</td><td>${d.top}</td><td>${{'Too oily':'Reduce oil','Needs more flavour':'Review seasoning','Too spicy':'Lower spice','Too sweet':'Reduce sugar'}[d.top]||'Keep as is'}</td></tr>`).join('')}</tbody></table></div></div></div>`;
+  return `<div class="dhead"><div><h1>Overview</h1><p class="muted">${fmt(TODAY)} · All data is anonymous and combined</p></div>${dmeta()}</div>
+  <div class="kpis">${kpi('edit','Feedback submissions',t.n.toLocaleString('en-IN'),'This term','lead')}${kpi('spark','Average satisfaction',`${t.avg.toFixed(2)}<span class="of"> / 5</span>`,'Weighted by number of ratings')}${kpi('grid','Dishes rated',t.dishes,'Across breakfast, lunch and dinner')}${kpi('taste','Most requested repeat',top.name,`${top.yes} students said bring it back`,'txt-v')}</div>
+  <div class="g2"><div class="panel"><h2>Satisfaction over time</h2>${lineChart()}</div><div class="panel"><h2>Needs attention first</h2><div class="tblwrap"><table style="min-width:400px"><thead><tr><th>Dish</th><th class="n">Avg</th><th>Top feedback</th><th>Suggested action</th></tr></thead><tbody>${base.slice(0,5).map(d=>`<tr><td>${dcell(d.id)}</td><td class="n">${f1(d.avg)}</td><td>${d.top}</td><td>${{'Too oily':'Reduce oil','Needs more flavour':'Review seasoning','Too spicy':'Lower spice','Too sweet':'Reduce sugar'}[d.top]||'Keep as is'}</td></tr>`).join('')}</tbody></table></div></div></div>
+  <div class="g3"><div class="panel"><h2>Crowd favourites</h2><p class="small muted">Highest average rating out of 5</p>${[...a].sort((x,y)=>y.avg-x.avg).slice(0,5).map(d=>hbar(d.name,d.avg,5,f1(d.avg))).join('')}</div>
+  <div class="panel"><h2>Common feedback</h2><p class="small muted">Share of all feedback tags</p>${t.tags.slice(0,5).map(x=>hbar(x.t,x.p,t.tags[0].p,pct(x.p),'',['Perfectly cooked','Great portion'].includes(x.t)?'':'warm')).join('')}</div>
+  <div class="panel"><h2>Meal-wise satisfaction</h2><p class="small muted">Average rating out of 5</p>${MEALS.map(m=>{const r=a.filter(d=>d.meal===m),n=r.reduce((x,d)=>x+d.n,0),av=r.reduce((x,d)=>x+d.avg*d.n,0)/n;return hbar(m,av,5,f1(av),`${m}: ${f1(av)} from ${n} ratings`)}).join('')}</div></div>`;
 }
 function dPerf(){
   const rows=rangeRows(),k=ui.sort,sorted=[...rows].sort((a,b)=>(k==='name'?a.name.localeCompare(b.name):a[k]-b[k])*ui.dir);
   const th=(key,l,n)=>`<th class="${n?'n':''}"><button data-a="dsort" data-v="${key}" ${ui.sort===key?`aria-sort="${ui.dir<0?'descending':'ascending'}"`:''}>${l}${ui.sort===key?(ui.dir<0?' ↓':' ↑'):''}</button></th>`;
   return `<div class="dhead"><div><h1>Dish Performance</h1><p class="muted">${sorted.length} dishes. Select a column to sort.</p></div><div class="filters"><label class="field-inline">Date <select id="fRange" data-c="range"><option value="all" ${ui.range==='all'?'selected':''}>This term</option><option value="30" ${ui.range==='30'?'selected':''}>Last 30 days</option><option value="7" ${ui.range==='7'?'selected':''}>Last 7 days</option></select></label><label class="field-inline">Meal <select id="fMeal" data-c="mealF">${['All',...MEALS].map(m=>`<option ${ui.mealF===m?'selected':''}>${m}</option>`).join('')}</select></label></div></div>
-  <div class="panel"><div class="tblwrap"><table><thead><tr>${th('name','Dish')}<th>Meal</th>${th('avg','Avg rating',1)}${th('n','Ratings',1)}${th('repeat','Repeat preference',1)}<th>Common feedback</th><th>Status</th></tr></thead><tbody>${sorted.map(d=>`<tr><td><b style="font-weight:600">${d.name}</b></td><td>${d.meal}</td><td class="n"><b>${f1(d.avg)}</b></td><td class="n">${d.n}</td><td class="n">${pct(d.repeat)}</td><td>${d.top}</td><td>${statusPill(d)}</td></tr>`).join('')}</tbody></table></div></div>`;
+  <div class="panel"><div class="tblwrap"><table><thead><tr>${th('name','Dish')}<th>Meal</th>${th('avg','Avg rating',1)}${th('n','Ratings',1)}${th('repeat','Repeat preference',1)}<th>Common feedback</th><th>Status</th></tr></thead><tbody>${sorted.map(d=>`<tr><td>${dcell(d.id)}</td><td>${d.meal}</td><td class="n"><b>${f1(d.avg)}</b></td><td class="n">${d.n}</td><td class="n">${pct(d.repeat)}</td><td>${d.top}</td><td>${statusPill(d)}</td></tr>`).join('')}</tbody></table></div></div>`;
 }
 function dPrefs(){
   const a=allAgg(),cats=CATS.map(c=>{const r=a.filter(d=>d.cat===c),n=r.reduce((x,d)=>x+d.n,0);return {c,n,avg:r.reduce((x,d)=>x+d.avg*d.n,0)/n}}).sort((x,y)=>y.avg-x.avg);
   const meals=MEALS.map(m=>{const r=a.filter(d=>d.meal===m),n=r.reduce((x,d)=>x+d.n,0);return {m,n,avg:r.reduce((x,d)=>x+d.avg*d.n,0)/n}}),t=totals(),pos=t.tags.filter(x=>['Perfectly cooked','Great portion'].includes(x.t)),pref=[...a].sort((x,y)=>y.repeat-x.repeat).slice(0,6);
-  return `<div class="dhead"><div><h1>Student Preferences</h1><p class="muted">Combined trends across all students</p></div><span class="samplepill">Illustrative sample data</span></div>
+  return `<div class="dhead"><div><h1>Student Preferences</h1><p class="muted">Combined trends across all students</p></div>${dmeta()}</div>
   <div class="g2"><div class="panel"><h2>Most popular dish categories</h2><p class="small muted">Average rating out of 5</p>${cats.map(c=>hbar(c.c,c.avg,5,f1(c.avg),`${c.c}: ${f1(c.avg)} from ${c.n} ratings`)).join('')}</div>
   <div class="panel"><h2>Highly preferred dishes</h2><p class="small muted">Share who would eat it again</p>${pref.map(d=>hbar(d.name,d.repeat,1,pct(d.repeat))).join('')}</div>
   <div class="panel"><h2>Meal-wise satisfaction</h2><p class="small muted">Average rating out of 5</p>${meals.map(m=>hbar(m.m,m.avg,5,f1(m.avg),`${m.m}: ${f1(m.avg)} from ${m.n} ratings`)).join('')}</div>
-  <div class="panel"><h2>Common food preferences</h2><p class="small muted">Share of all feedback tags</p>${t.tags.map(x=>hbar(x.t,x.p,t.tags[0].p,pct(x.p),'',pos.includes(x)?'':'warm')).join('')}<p class="small muted">Blue marks positive feedback. Brown marks something to fix.</p></div></div>`;
+  <div class="panel"><h2>Common food preferences</h2><p class="small muted">Share of all feedback tags</p>${t.tags.map(x=>hbar(x.t,x.p,t.tags[0].p,pct(x.p),'',pos.includes(x)?'':'warm')).join('')}<p class="small muted">Blue marks positive feedback. Orange marks something to fix.</p></div></div>`;
 }
 function dTrends(){
   const t=totals(),a=allAgg(),i=TAGS.indexOf(ui.tag),rows=[...a].map(d=>({...d,s:d.tags[i]/d.n})).sort((x,y)=>y.s-x.s).slice(0,6),maxS=rows[0].s||1,top=(k)=>[...a].map(d=>({...d,s:d.tags[TAGS.indexOf(k)]/d.n})).sort((x,y)=>y.s-x.s).slice(0,3),imp=[...a].filter(d=>d.avg<3.5).sort((x,y)=>x.avg-y.avg);
-  return `<div class="dhead"><div><h1>Feedback Trends</h1><p class="muted">What students mention most, and where</p></div><span class="samplepill">Illustrative sample data</span></div>
+  return `<div class="dhead"><div><h1>Feedback Trends</h1><p class="muted">What students mention most, and where</p></div>${dmeta()}</div>
   <div class="panel"><h2>Changes in satisfaction over time</h2>${lineChart()}</div>
   <div class="g2"><div class="panel"><h2>Most common feedback tags</h2>${t.tags.map(x=>hbar(x.t,x.p,t.tags[0].p,pct(x.p))).join('')}</div>
   <div class="panel"><h2>Dishes by feedback tag</h2><div class="tagtabs">${TAGS.map(x=>`<button class="chip" id="dt-${x.replace(/ /g,'')}" aria-pressed="${ui.tag===x}" data-a="dtag" data-v="${x}">${x}</button>`).join('')}</div>${rows.map(d=>hbar(d.name,d.s,maxS,pct(d.s),`${d.name}: ${pct(d.s)} of ratings mention ${ui.tag.toLowerCase()}`)).join('')}</div></div>
@@ -698,14 +750,14 @@ function dPlan(){
   const t=totals(),a=allAgg(),rec=[...a].filter(d=>d.avg>=4&&d.repeat>=.7).sort((x,y)=>y.yes-x.yes),up=allUpcoming(),pop=[...a].sort((x,y)=>y.avg*y.repeat-x.avg*x.repeat),[sd,sm]=ui.slot.split('|');
   const added=(d)=>S.added.some(x=>x[0]===sd&&x[1]===sm&&x[2]===d);
   return `<div class="dhead"><div><h1>Menu Planning</h1><p class="muted">Use student demand to plan the next menus</p></div><label class="field-inline">Add to <select id="fSlot" data-c="slot">${PLAN_SLOTS.map(s=>{const[d,m]=s.split('|');return `<option value="${s}" ${ui.slot===s?'selected':''}>${fmtS(d)} · ${m}</option>`}).join('')}</select></label></div>
-  <div class="g2"><div class="panel"><h2>Recommended for repetition</h2><p class="small muted">Rated 4.0 or higher, and at least 70% would eat it again</p><div class="tblwrap"><table style="min-width:440px"><thead><tr><th>Dish</th><th class="n">Avg</th><th class="n">Repeat</th><th></th></tr></thead><tbody>${rec.map(d=>`<tr><td><b style="font-weight:600">${d.name}</b></td><td class="n">${f1(d.avg)}</td><td class="n">${pct(d.repeat)}</td><td style="text-align:right">${added(d.id)?`<button class="ghost" id="add-${d.id}" data-a="planDel" data-v="${d.id}">Added ✓</button>`:`<button class="pillbtn" id="add-${d.id}" data-a="planAdd" data-v="${d.id}">Add to menu</button>`}</td></tr>`).join('')}</tbody></table></div></div>
+  <div class="g2"><div class="panel"><h2>Recommended for repetition</h2><p class="small muted">Rated 4.0 or higher, and at least 70% would eat it again</p><div class="tblwrap"><table style="min-width:440px"><thead><tr><th>Dish</th><th class="n">Avg</th><th class="n">Repeat</th><th></th></tr></thead><tbody>${rec.map(d=>`<tr><td>${dcell(d.id)}</td><td class="n">${f1(d.avg)}</td><td class="n">${pct(d.repeat)}</td><td style="text-align:right">${added(d.id)?`<button class="ghost" id="add-${d.id}" data-a="planDel" data-v="${d.id}">Added ✓</button>`:`<button class="pillbtn" id="add-${d.id}" data-a="planAdd" data-v="${d.id}">Add to menu</button>`}</td></tr>`).join('')}</tbody></table></div></div>
   <div class="panel"><h2>Most requested dishes</h2><p class="small muted">Students who chose "Bring it back!"</p>${t.req.slice(0,6).map(d=>hbar(d.name,d.yes,t.req[0].yes,d.yes)).join('')}</div>
-  <div class="panel"><h2>Upcoming menu entries</h2><div class="tblwrap" style="max-height:340px;overflow-y:auto"><table style="min-width:430px"><thead><tr><th>Date</th><th>Meal</th><th>Dish</th><th class="n">Avg</th><th>Signal</th></tr></thead><tbody>${up.map(([d,m,id])=>{const x=agg(id);return `<tr><td style="white-space:nowrap">${fmtS(d)}</td><td>${m}</td><td><b style="font-weight:600">${x.name}</b></td><td class="n">${f1(x.avg)}</td><td>${statusPill(x)}</td></tr>`}).join('')}</tbody></table></div></div>
+  <div class="panel"><h2>Upcoming menu entries</h2><div class="tblwrap" style="max-height:340px;overflow-y:auto"><table style="min-width:430px"><thead><tr><th>Date</th><th>Meal</th><th>Dish</th><th class="n">Avg</th><th>Signal</th></tr></thead><tbody>${up.map(([d,m,id])=>{const x=agg(id);return `<tr><td style="white-space:nowrap">${fmtS(d)}</td><td>${m}</td><td>${dcell(id)}</td><td class="n">${f1(x.avg)}</td><td>${statusPill(x)}</td></tr>`}).join('')}</tbody></table></div></div>
   <div class="panel"><h2>Popularity of previously served dishes</h2><p class="small muted">Average rating multiplied by repeat preference, out of 5</p>${pop.slice(0,8).map(d=>hbar(d.name,d.avg*d.repeat,5,f1(d.avg*d.repeat))).join('')}</div></div>`;
 }
 function dashboard(){
   const v={overview:dOverview,response:dResponse,perf:dPerf,prefs:dPrefs,trends:dTrends,plan:dPlan}[ui.dv]();
-  return `<div class="dash"><nav class="side" aria-label="Dashboard"><div class="lbl">Mess Team</div>${DV.map(([k,i,l])=>`<button data-a="dnav" data-v="${k}" ${ui.dv===k?'aria-current="page"':''}>${ico(i)}${l}</button>`).join('')}<p class="note">No student names, IDs or personal rating histories appear here.</p></nav><div class="dmain" id="dmain"><div class="dinner">${v}</div></div></div>`;
+  return `<div class="dash"><nav class="side" aria-label="Dashboard"><div class="sbrand"><span class="ltile"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 2a14 14 0 1 0 14 14 5 5 0 0 1-5.2-4.6 5 5 0 0 1-5.4-5A5 5 0 0 1 16 2Z"/></svg></span><span><b>BITEBACK</b><small>Mess team dashboard</small></span></div>${DV.map(([k,i,l])=>`<button data-a="dnav" data-v="${k}" ${ui.dv===k?'aria-current="page"':''}>${ico(i)}${l}</button>`).join('')}<div class="note">${ico('shield')}<p>All results are anonymous and combined. No student names, IDs or personal rating histories appear here.</p></div></nav><div class="dmain" id="dmain"><div class="dinner">${v}</div></div></div>`;
 }
 
 /* ---------- Live phone simulation ---------- */
@@ -745,8 +797,8 @@ function lockPhone(){
 function student(){return `<div class="stage">${ui.view==='app'?appPhone():lockPhone()}</div>`}
 function dResponse(){
   const l=LIVE(),rate=l.rated/l.prompted,v=votes(),fun=[['Scanned in',l.scan],['Sent a prompt',l.prompted],[`Rated ${ml}`,l.rated],['Named a dish',l.named]],week=[['Mon','Breakfast',.38],['Tue','Lunch',.47],['Wed','Dinner',.41],['Thu','Lunch',rate]];
-  return `<div class="dhead"><div><h1>Response</h1><p class="muted">${DAYN[dt(TODAY).getUTCDay()]} ${ml} · Prompts sent 40 minutes after each student's check-in</p></div><span class="samplepill">Illustrative sample data</span></div>
-  <div class="kpis"><div class="kpi lead"><small>Response rate</small><span class="num" id="respRate">${(rate*100).toFixed(1)}%</span><small>Of students prompted</small></div><div class="kpi"><small>Ate at the mess</small><span class="num">${l.scan}</span><small>From entry records</small></div><div class="kpi"><small>Lunch ratings</small><span class="num" id="respRated">${l.rated}</span><small>Anonymous and combined</small></div><div class="kpi"><small>Prompts paused</small><span class="num">${l.paused}</span><small>After 3 ignored prompts</small></div></div>
+  return `<div class="dhead"><div><h1>Response</h1><p class="muted">${DAYN[dt(TODAY).getUTCDay()]} ${ml} · Prompts sent 40 minutes after each student's check-in</p></div>${dmeta()}</div>
+  <div class="kpis">${kpi('bell','Response rate',`<span id="respRate">${(rate*100).toFixed(1)}%</span>`,'Of students prompted','lead')}${kpi('check','Checked in at the mess',l.scan,'From biometric entry records')}${kpi('spark',`${SMEAL} ratings`,`<span id="respRated">${l.rated}</span>`,'Anonymous and combined')}${kpi('lock','Prompts paused',l.paused,'After 3 ignored prompts')}</div>
   <div class="g2"><div class="panel"><h2>From entry to rating</h2>${fun.map(([a,b])=>hbar(a,b,l.scan,b)).join('')}</div><div class="panel"><h2>Today's standout dishes</h2><p class="small muted">Students who named this dish after a 3 to 5 star meal</p>${v.map(([d,c])=>hbar(D[d].name,c,v[0][1],c)).join('')}</div>
   <div class="panel"><h2>Response rate this week</h2><p class="small muted">One prompt per student per day, rotating across meals</p>${week.map(([d,m,r])=>hbar(`${d} · ${m}`,r,1,pct(r))).join('')}</div><div class="panel"><h2>Privacy by design</h2><p>The prompt system uses one fact from the mess entry system: the time a student entered.</p><p class="muted">Fingerprint data never reaches BITEBACK, and this dashboard shows no names, IDs or individual ratings.</p></div></div>`;
 }

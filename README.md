@@ -4,6 +4,6 @@ A course concept for student food feedback at a university mess. These are click
 
 - **Smart Prompts** (main page): a live phone using your real time and date. A few seconds after it opens, a "checked in" notification arrives, followed by a one-tap meal rating. Reload the page to start again.
 - **Mess team dashboard** (`/#dashboard`): combined, anonymous results, including response rates for the rating prompts.
-- **Original app** (`/original-app/`): the first version, designed as a standalone student app.
+- **Mess dashboard** (`/original-app/`): the mess team's desktop dashboard on its own, with overview, response rates, dish performance, student preferences, feedback trends and menu planning.
 
 All ratings, dates and statistics are illustrative sample data. My Flame screens are a course concept, not official My Flame screens.
