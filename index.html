@@ -323,9 +323,19 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .steps [aria-current=step] .stepn{background:var(--sand);color:var(--ink)}
 .stepnote{background:var(--white);border-radius:var(--r-md);padding:12px;display:grid;gap:3px}
 #nextBtn{flex:none}
-@media (min-width:900px){.guide.story{display:flex}}
+.shell{height:100vh;height:100dvh}
+.stage{align-items:center;padding:20px}
+.phone{width:auto;height:min(844px,100%);aspect-ratio:390/844;max-width:100%}
+.lockfoot{padding:0 22px}
+.homebar{display:block;border:0;padding:0;cursor:pointer;margin:14px auto 4px}
+.ncard.tap{cursor:pointer}
+.ncompact{width:100%;text-align:left;cursor:pointer}
+.banner{position:absolute;z-index:8;left:8px;right:8px;top:52px;display:flex;align-items:center;gap:10px;background:var(--warm);color:var(--ink);border-radius:20px;padding:11px 12px;box-shadow:0 10px 30px rgba(10,16,32,.28);animation:drop .35s cubic-bezier(.2,.8,.2,1);text-align:left;font-size:13px}
+.banner b{display:block;font:700 12.5px var(--head);letter-spacing:.03em}
+.banner .nt{font-size:11.5px;color:var(--muted);align-self:flex-start}
+@keyframes drop{from{transform:translateY(-120%)}to{transform:none}}
 @media (max-width:640px){#stepLbl .nm{display:none}}
-@media (max-width:520px){.sbar{display:none}.lockbody{padding-top:22px}.seg .lg{display:none}.stepper{gap:5px}.roundbtn{width:32px;height:32px}}
+@media (max-width:520px){.stage{padding:0}.phone{aspect-ratio:auto;width:100%;height:100%;border:0;border-radius:0;box-shadow:none}.banner{top:calc(8px + env(safe-area-inset-top,0px))}.sbar{display:none}.lockbody{padding-top:22px}.seg .lg{display:none}.stepper{gap:5px}.roundbtn{width:32px;height:32px}}
 @media (prefers-reduced-motion:reduce){.ncard,.live,.kiosk{animation:none}.fp::after{animation:none;opacity:.5}}
 </style>
 
@@ -333,7 +343,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
   <header class="topbar">
     <div class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path fill="#293B64" d="M16 2a14 14 0 1 0 14 14 5 5 0 0 1-5.2-4.6 5 5 0 0 1-5.4-5A5 5 0 0 1 16 2Z"/><circle cx="12" cy="17" r="3" fill="#E8D7B9"/></svg><span>BITEBACK</span></div>
     <div class="seg" role="group" aria-label="Choose interface" id="modeSeg"></div>
-    <div class="stepper"><button class="roundbtn" id="prevBtn" data-a="storyPrev" aria-label="Previous step"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span id="stepLbl" aria-live="polite"></span><button class="pillbtn" id="nextBtn" data-a="storyNext">Next</button></div>
+    
   </header>
   <main id="root"></main>
 </div>
@@ -345,7 +355,10 @@ const TAGS=['Too oily','Needs more flavour','Perfectly cooked','Too spicy','Grea
 const STAR_LABEL=['','Not for me','Could be better','It was okay','Pretty good','Absolutely loved it'];
 const MEALS=['Breakfast','Lunch','Dinner'];
 const MEAL_TIME={Breakfast:'8:00 AM',Lunch:'12:30 PM',Dinner:'7:30 PM'};
-const TODAY='2025-11-20';
+const SH=(()=>{const n=new Date();return Math.round((Date.UTC(n.getFullYear(),n.getMonth(),n.getDate())-Date.UTC(2025,10,20))/864e5)})();
+const sh=iso=>{const[y,m,d]=iso.split('-').map(Number);return new Date(Date.UTC(y,m-1,d+SH)).toISOString().slice(0,10)};
+const SMEAL=(h=>h<11?'Breakfast':h<16?'Lunch':'Dinner')(new Date().getHours());
+const TODAY=sh('2025-11-20');
 // id, name, category, usual meal, icon, ratings, average, repeat share, tag counts in TAGS order
 const DISHES=[
 ['pbm','Paneer Butter Masala','Paneer','Lunch','curry',412,4.6,.91,[38,2,62,8,14,8]],
@@ -366,37 +379,37 @@ const D=Object.fromEntries(DISHES.map(d=>[d.id,d]));
 const CATS=[...new Set(DISHES.map(d=>d.cat))];
 const MENU={Breakfast:['poha','idli'],Lunch:['pbm','dal','jeera','chapati','raita'],Dinner:['pulao','chole','paratha']};
 const UPCOMING=[
-['2025-11-21','Lunch','jeera'],['2025-11-21','Lunch','chapati'],
-['2025-11-22','Breakfast','poha'],['2025-11-22','Dinner','chole'],['2025-11-22','Dinner','paratha'],
-['2025-11-23','Lunch','dal'],['2025-11-23','Lunch','raita'],['2025-11-24','Breakfast','dosa'],
-['2025-11-24','Dinner','pulao'],['2025-11-25','Dinner','biryani'],['2025-11-26','Dinner','lababdar'],['2025-11-27','Breakfast','idli'],['2025-11-28','Lunch','pbm']
+[sh('2025-11-21'),'Lunch','jeera'],[sh('2025-11-21'),'Lunch','chapati'],
+[sh('2025-11-22'),'Breakfast','poha'],[sh('2025-11-22'),'Dinner','chole'],[sh('2025-11-22'),'Dinner','paratha'],
+[sh('2025-11-23'),'Lunch','dal'],[sh('2025-11-23'),'Lunch','raita'],[sh('2025-11-24'),'Breakfast','dosa'],
+[sh('2025-11-24'),'Dinner','pulao'],[sh('2025-11-25'),'Dinner','biryani'],[sh('2025-11-26'),'Dinner','lababdar'],[sh('2025-11-27'),'Breakfast','idli'],[sh('2025-11-28'),'Lunch','pbm']
 ];
-const PLAN_SLOTS=['2025-11-28','2025-11-29','2025-12-01','2025-12-02'].flatMap(d=>MEALS.map(m=>d+'|'+m));
-const WEEKS=[['6 Oct',3.52],['13 Oct',3.58],['20 Oct',3.61],['27 Oct',3.66],['3 Nov',3.7],['10 Nov',3.74],['17 Nov',3.81]];
+const PLAN_SLOTS=[sh('2025-11-28'),sh('2025-11-29'),sh('2025-12-01'),sh('2025-12-02')].flatMap(d=>MEALS.map(m=>d+'|'+m));
+const WEEKS=[3.52,3.58,3.61,3.66,3.7,3.74,3.81].map((v,i)=>{const x=new Date(Date.UTC(2025,9,6+7*i+SH));return [x.getUTCDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][x.getUTCMonth()],v]});
 const seedRec=(date,meal,d,s,t,a)=>({key:`${date}|${meal}|${d}`,d,date,meal,s,t,a,c:'',orig:{s,t:[...t],a}});
 const SEED=()=>({
-  name:'Hitanshi',time:1,story:{step:0,stars:0,dish:null,skipDish:false,dismissed:false,favAdded:false},
+  name:'Hitanshi',time:1,story:{step:0,stars:0,dish:null,skipDish:false,dismissed:false,favAdded:false,times:{}},
   records:[
-    seedRec('2025-11-20','Breakfast','idli',4,['Perfectly cooked'],'yes'),
-    seedRec('2025-11-17','Breakfast','dosa',4,['Perfectly cooked'],'yes'),
-    seedRec('2025-11-15','Dinner','biryani',5,['Perfectly cooked','Great portion'],'yes'),
-    seedRec('2025-11-14','Lunch','pbm',5,['Perfectly cooked','Great portion'],'yes'),
-    seedRec('2025-11-14','Lunch','dal',3,['Needs more flavour'],null),
-    seedRec('2025-11-13','Dinner','chole',3,['Too spicy'],'no'),
-    seedRec('2025-11-12','Dinner','lababdar',4,[],'yes'),
-    seedRec('2025-11-11','Breakfast','poha',2,['Needs more flavour'],'no'),
-    seedRec('2025-11-10','Breakfast','dosa',4,['Perfectly cooked'],'yes'),
-    seedRec('2025-11-07','Lunch','pbm',5,['Perfectly cooked'],'yes'),
-    seedRec('2025-11-06','Breakfast','idli',5,['Perfectly cooked'],'yes'),
-    seedRec('2025-11-05','Dinner','chole',3,['Too spicy'],null),
-  ],
-  favs:['pbm','dosa','biryani'],removed:[],skipped:[],read:['g-menu','g-oil','g-poha','ret:idli','ret:pbm','up:idli:2025-11-27','up:lababdar:2025-11-26','up:biryani:2025-11-25'],added:[],
+    seedRec(sh('2025-11-20'),'Breakfast','idli',4,['Perfectly cooked'],'yes'),
+    seedRec(sh('2025-11-17'),'Breakfast','dosa',4,['Perfectly cooked'],'yes'),
+    seedRec(sh('2025-11-15'),'Dinner','biryani',5,['Perfectly cooked','Great portion'],'yes'),
+    seedRec(sh('2025-11-14'),'Lunch','pbm',5,['Perfectly cooked','Great portion'],'yes'),
+    seedRec(sh('2025-11-14'),'Lunch','dal',3,['Needs more flavour'],null),
+    seedRec(sh('2025-11-13'),'Dinner','chole',3,['Too spicy'],'no'),
+    seedRec(sh('2025-11-12'),'Dinner','lababdar',4,[],'yes'),
+    seedRec(sh('2025-11-11'),'Breakfast','poha',2,['Needs more flavour'],'no'),
+    seedRec(sh('2025-11-10'),'Breakfast','dosa',4,['Perfectly cooked'],'yes'),
+    seedRec(sh('2025-11-07'),'Lunch','pbm',5,['Perfectly cooked'],'yes'),
+    seedRec(sh('2025-11-06'),'Breakfast','idli',5,['Perfectly cooked'],'yes'),
+    seedRec(sh('2025-11-05'),'Dinner','chole',3,['Too spicy'],null),
+  ].filter(r=>!(SMEAL==='Breakfast'&&r.date===TODAY)),
+  favs:['pbm','dosa','biryani'],removed:[],skipped:[],read:['g-menu','g-oil','g-poha','ret:idli','ret:pbm','up:idli:'+sh(sh('2025-11-27')),'up:lababdar:'+sh(sh('2025-11-26')),'up:biryani:'+sh(sh('2025-11-25'))],added:[],
   notif:{returning:true,menu:true,general:true},reminders:{Breakfast:false,Lunch:true,Dinner:true},
   mealPrefs:['Breakfast','Lunch','Dinner'],spice:'Medium',loggedOut:false
 });
 const STORE='biteback-smart-prompts-v1';
 let S=SEED();
-try{const raw=localStorage.getItem(STORE);if(raw)S={...S,...JSON.parse(raw)}}catch(e){}
+
 const save=()=>{try{localStorage.setItem(STORE,JSON.stringify(S))}catch(e){}};
 const ui={mode:location.hash==='#dashboard'?'dashboard':'student',stack:[{s:'home'}],draft:null,sheet:null,toast:null,loop:0,
   dv:'overview',range:'all',mealF:'All',sort:'avg',dir:-1,tag:'Too oily',slot:PLAN_SLOTS[0]};
@@ -417,7 +430,7 @@ const fmt=i=>{const x=dt(i);return `${DAYN[x.getUTCDay()]}, ${x.getUTCDate()} ${
 const fmtS=i=>{const x=dt(i);return `${DAYN[x.getUTCDay()].slice(0,3)}, ${x.getUTCDate()} ${MON[x.getUTCMonth()].slice(0,3)}`};
 const f1=n=>n.toFixed(1);
 const pct=n=>Math.round(n*100)+'%';
-const served=m=>m==='Breakfast'||(m==='Lunch'&&S.story.step>0);
+const served=m=>MEALS.indexOf(m)<MEALS.indexOf(SMEAL)||(m===SMEAL&&S.story.step>0);
 const allUpcoming=()=>[...UPCOMING,...S.added].sort((a,b)=>a[0].localeCompare(b[0])||MEALS.indexOf(a[1])-MEALS.indexOf(b[1]));
 
 /* ---------- Shared selectors ---------- */
@@ -458,7 +471,7 @@ const backHead=(t,sub)=>`<div class="backrow"><button class="iconbtn" data-a="ba
 
 function dishRow(id,m){
   const r=todayRec(id,m),on=served(m),skip=S.skipped.includes(`${m}|${id}`),last=latest(id);
-  if(!on)return `<div class="dish">${thumb(id,m)}<div class="grow"><b>${D[id].name}</b><span class="muted small">${m==='Lunch'?'Unlocks after your mess scan':'Unlocks after your dinner scan'}</span></div><span class="muted">${ico('lock')}</span></div>`;
+  if(!on)return `<div class="dish">${thumb(id,m)}<div class="grow"><b>${D[id].name}</b><span class="muted small">${m===SMEAL?'Unlocks after you check in':'Unlocks after you check in'}</span></div><span class="muted">${ico('lock')}</span></div>`;
   if(r)return `<div class="dish"><button class="dishmain" data-a="rate" data-v="${m}|${id}" aria-label="View or edit your rating for ${D[id].name}">${thumb(id,m)}<span class="grow"><b>${D[id].name}</b>${stars(r.s)} <span class="small" style="font-weight:600;color:var(--cobalt)">Rated</span></span></button><button class="ghost" data-a="rate" data-v="${m}|${id}">Edit</button></div>`;
   if(skip)return `<div class="dish">${thumb(id,m)}<div class="grow"><b>${D[id].name}</b><span class="muted small">You didn't have this</span></div><button class="ghost" data-a="unskip" data-v="${m}|${id}">Undo</button></div>`;
   return `<div class="dish"><button class="dishmain" data-a="rate" data-v="${m}|${id}" aria-label="Rate ${D[id].name}">${thumb(id,m)}<span class="grow"><b>${D[id].name}</b><span class="muted small">${last&&last.s>=4?`Last time: ${last.s}/5`:'Rate this dish'}</span></span></button><button class="pillbtn" data-a="rate" data-v="${m}|${id}" aria-label="Rate ${D[id].name}">Rate</button></div>`;
@@ -473,8 +486,8 @@ function home(){
   const avail=MEALS.filter(served).flatMap(m=>MENU[m].map(d=>[m,d])),done=avail.filter(([m,d])=>todayRec(d,m)).length,st=myStats(),ins=insights()[0],n=notifications().up[0];
   const line=ins?(ins.t.includes('paneer')?"You've been enjoying paneer dishes lately.":ins.t+'.'):'Rate a few more dishes to unlock your first insight.';
   return `<div class="apphead"><div class="pagehead"><h1>Hey, ${esc(S.name)}!</h1><p>What's on your plate today?</p></div>${bell()}</div>
-  ${S.story.stars?`<div class="lunchdone"><span class="tk">${ico('check')}</span><div class="grow"><b>Lunch rated from your lock screen</b><span class="small">${stars(S.story.stars)} at 1:20 PM${S.story.dish?` · ${S.story.stars<=2?'Let down by':'Standout'}: ${D[S.story.dish].name}`:''}</span></div></div>`:''}
-  <div class="hero"><span class="eyebrow" style="color:var(--sand)">Today's menu</span><h1>Thursday,<br>20 November</h1>
+  ${S.story.stars?`<div class="lunchdone"><span class="tk">${ico('check')}</span><div class="grow"><b>${SMEAL} rated from your lock screen</b><span class="small">${stars(S.story.stars)} at ${S.story.times.r}${S.story.dish?` · ${S.story.stars<=2?'Let down by':'Standout'}: ${D[S.story.dish].name}`:''}</span></div></div>`:''}
+  <div class="hero"><span class="eyebrow" style="color:var(--sand)">Today's menu</span><h1>${fmt(TODAY).replace(', ',',<br>')}</h1>
   <div><div class="progress" role="progressbar" aria-valuenow="${done}" aria-valuemin="0" aria-valuemax="${avail.length}" aria-label="Dishes rated today"><span style="width:${avail.length?done/avail.length*100:0}%"></span></div><p class="sub small" style="margin-top:6px">${done} of ${avail.length} dishes rated. Rating each dish is optional.</p></div></div>
   ${MEALS.map(mealCard).join('')}
   <section class="section"><h2>Your Taste, So Far</h2>
@@ -580,7 +593,7 @@ function appPhone(){
   const body=c.s==='rate'?rate():c.s==='done'?doneScr():`<div class="scroll" id="scr">${screens[c.s]()}</div>`;
   const active=c.tab||c.s;
   const nav=[['home','home','Home'],['taste','taste','My Taste'],['feedback','group','Feedback'],['profile','user','Profile']];
-  return `<div class="phone app">${SB('7:02')}<div class="hostbar"><button class="iconbtn" data-a="storyGo" data-v="6" aria-label="Back to lock screen">${ico('back')}</button><div class="ht"><small>My Flame</small><b>BITEBACK</b></div><span class="cpill">Concept</span></div>${body}${tabsOn?`<nav class="tabs" aria-label="Main">${nav.map(([s,i,l])=>`<button data-a="tab" data-v="${s}" ${active===s?'aria-current="page"':''}>${ico(i)}${l}</button>`).join('')}</nav>`:''}${sheet()}${ui.toast?`<div class="toast" role="status">${esc(ui.toast)}</div>`:''}</div>`;
+  return `<div class="phone app">${ui.banner?`<button class="banner" data-a="toLock"><span class="nlogo">${LOGO_W}</span><span class="grow"><b>BITEBACK</b><span>${ui.banner}</span></span><span class="nt">now</span></button>`:''}${SB()}<div class="hostbar"><button class="iconbtn" data-a="toLock" aria-label="Back to lock screen">${ico('back')}</button><div class="ht"><small>My Flame</small><b>BITEBACK</b></div><span class="cpill">Concept</span></div>${body}${tabsOn?`<nav class="tabs" aria-label="Main">${nav.map(([s,i,l])=>`<button data-a="tab" data-v="${s}" ${active===s?'aria-current="page"':''}>${ico(i)}${l}</button>`).join('')}</nav>`:''}${sheet()}${ui.toast?`<div class="toast" role="status">${esc(ui.toast)}</div>`:''}</div>`;
 }
 /* ---------- Dashboard ---------- */
 const DV=[['overview','grid','Overview'],['response','bell','Response'],['perf','bars','Dish Performance'],['prefs','taste','Student Preferences'],['trends','trend','Feedback Trends'],['plan','plan','Menu Planning']];
@@ -605,7 +618,7 @@ function lineChart(){
 }
 function dOverview(){
   const t=totals(),a=allAgg(),base=[...a].sort((x,y)=>x.avg-y.avg),top=t.req[0];
-  return `<div class="dhead"><div><h1>Overview</h1><p class="muted">Thursday, 20 November · All data is anonymous and combined</p></div><span class="samplepill">Illustrative sample data</span></div>
+  return `<div class="dhead"><div><h1>Overview</h1><p class="muted">${fmt(TODAY)} · All data is anonymous and combined</p></div><span class="samplepill">Illustrative sample data</span></div>
   <div class="kpis"><div class="kpi lead"><small>Total feedback submissions</small><span class="num">${t.n.toLocaleString('en-IN')}</span><small>This term</small></div><div class="kpi"><small>Average student satisfaction</small><span class="num">${t.avg.toFixed(2)}<span style="font-size:15px"> / 5</span></span><small>Weighted by ratings</small></div><div class="kpi"><small>Dishes rated</small><span class="num">${t.dishes}</span><small>Across 3 meals</small></div><div class="kpi txt-v"><small>Most requested repeat</small><span class="num">${top.name}</span><small>${top.yes} students said bring it back</small></div></div>
   <div class="g2"><div class="panel"><h2>Satisfaction over time</h2>${lineChart()}</div><div class="panel"><h2>Needs attention first</h2><div class="tblwrap"><table style="min-width:400px"><thead><tr><th>Dish</th><th class="n">Avg</th><th>Top feedback</th><th>Suggested action</th></tr></thead><tbody>${base.slice(0,5).map(d=>`<tr><td><b style="font-weight:600">${d.name}</b></td><td class="n">${f1(d.avg)}</td><td>${d.top}</td><td>${{'Too oily':'Reduce oil','Needs more flavour':'Review seasoning','Too spicy':'Lower spice','Too sweet':'Reduce sugar'}[d.top]||'Keep as is'}</td></tr>`).join('')}</tbody></table></div></div></div>`;
 }
@@ -646,68 +659,59 @@ function dashboard(){
   return `<div class="dash"><nav class="side" aria-label="Dashboard"><div class="lbl">Mess Team</div>${DV.map(([k,i,l])=>`<button data-a="dnav" data-v="${k}" ${ui.dv===k?'aria-current="page"':''}>${ico(i)}${l}</button>`).join('')}<p class="note">No student names, IDs or personal rating histories appear here.</p></nav><div class="dmain" id="dmain"><div class="dinner">${v}</div></div></div>`;
 }
 
-/* ---------- Smart prompt story ---------- */
-const STORY=[
-['Scan','Hitanshi scans in at the mess','The existing biometric check confirms who actually ate. Students report nothing, and only the entry time is used.'],
-['Wait 40 minutes','Nothing interrupts the meal','The prompt is timed from each student\'s own entry, so it lands just after they finish.'],
-['One-tap rating','Rate lunch from the lock screen','One tap submits a rating. There is no app to find, open or log in to.'],
-['Follow-up','Name the dish that mattered','One optional question turns a meal rating into dish-level data for the mess team.'],
-['Instant reward','See what everyone else thought','Immediate collective feedback makes the rating feel counted.'],
-['Visible impact','The mess acts on feedback','Showing a real change answers the question "why should I bother?"'],
-['Personal payoff','A loved dish returns','Past ratings now do something useful for the student.'],
-['My Flame section','Everything else, one tap away','My Taste and Feedback sit in a small section for students who want more.'],
-['Mess dashboard','The rating reaches the mess team','Combined results and response rates show whether the prompts are working.'],
-];
-const LOCK_TIME=[['12:40','Thursday, 20 November'],['12:41','Thursday, 20 November'],['1:20','Thursday, 20 November'],['1:20','Thursday, 20 November'],['1:21','Thursday, 20 November'],['8:10','Saturday, 22 November'],['7:00','Sunday, 23 November']];
-const VOTES={pbm:148,dal:34,chapati:28,raita:23,jeera:19};
+/* ---------- Live phone simulation ---------- */
+const ml=SMEAL.toLowerCase();
+const VOTES_BY={Breakfast:{idli:121,poha:41},Lunch:{pbm:148,dal:34,chapati:28,raita:23,jeera:19},Dinner:{pulao:131,chole:62,paratha:57}};
 const LIVE=()=>{const t=S.story,scan=t.step>0?1:0,rated=t.stars?1:0,named=t.dish?1:0;return {scan:683+scan,prompted:640+scan,rated:312+rated,named:252+named,paused:43}};
-const votes=()=>{const t=S.story,v={...VOTES};if(t.dish&&t.stars>=3)v[t.dish]=(v[t.dish]||0)+1;return Object.entries(v).sort((a,b)=>b[1]-a[1])};
+const votes=()=>{const t=S.story,v={...VOTES_BY[SMEAL]};if(t.dish&&t.stars>=3)v[t.dish]=(v[t.dish]||0)+1;return Object.entries(v).sort((a,b)=>b[1]-a[1])};
+const clock=()=>{const d=new Date();return (d.getHours()%12||12)+':'+String(d.getMinutes()).padStart(2,'0')};
+const clockAP=()=>clock()+(new Date().getHours()<12?' AM':' PM');
+const lockDate=()=>{const d=new Date();return `${DAYN[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}`};
 const LOGO_W=`<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 2a14 14 0 1 0 14 14 5 5 0 0 1-5.2-4.6 5 5 0 0 1-5.4-5A5 5 0 0 1 16 2Z"/></svg>`;
 const nHead=(w='now')=>`<div class="nhead"><span class="nlogo">${LOGO_W}</span><b>BITEBACK</b><span>via My Flame</span><span class="nt">${w}</span></div>`;
-const SB=(t='')=>`<div class="sbar"><span>${t}</span><span class="isl"></span><span class="si" aria-hidden="true"><svg viewBox="0 0 18 12" width="17" height="11"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="10" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg><svg viewBox="0 0 16 12" width="15" height="11"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0ZM2.8 6.3a7.4 7.4 0 0 1 10.4 0l-1.4 1.4a5.4 5.4 0 0 0-7.6 0ZM0 3.5a11.3 11.3 0 0 1 16 0l-1.4 1.4a9.3 9.3 0 0 0-13.2 0Z" fill="currentColor"/></svg><svg viewBox="0 0 27 13" width="25" height="12"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="15" height="8" rx="2" fill="currentColor"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div>`;
-function earlier(n){
-  const t=S.story,o=LIVE().rated-1,list={2:[['Biometric done. Enjoy your lunch!','12:40 PM']],3:[['Biometric done. Enjoy your lunch!','12:40 PM']],4:[['Biometric done. Enjoy your lunch!','12:40 PM']],5:[[t.stars?`You and ${o} others rated lunch.`:'Lunch prompt dismissed. No more today.','Thu']],6:[['Students said the poha needed more flavour.','Sat']]}[n];
-  return list?`<div class="earlierlbl">Earlier</div>${list.map(([x,w])=>`<div class="ncompact"><span class="nlogo">${LOGO_W}</span><b>${x}</b><span class="nt">${w}</span></div>`).join('')}`:'';
-}
+const SB=(showTime=true)=>`<div class="sbar"><span data-clock="${showTime?1:0}">${showTime?clock():''}</span><span class="isl"></span><span class="si" aria-hidden="true"><svg viewBox="0 0 18 12" width="17" height="11"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5" width="3" height="7" rx="1" fill="currentColor"/><rect x="10" y="2.5" width="3" height="9.5" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg><svg viewBox="0 0 16 12" width="15" height="11"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0ZM2.8 6.3a7.4 7.4 0 0 1 10.4 0l-1.4 1.4a5.4 5.4 0 0 0-7.6 0ZM0 3.5a11.3 11.3 0 0 1 16 0l-1.4 1.4a9.3 9.3 0 0 0-13.2 0Z" fill="currentColor"/></svg><svg viewBox="0 0 27 13" width="25" height="12"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="15" height="8" rx="2" fill="currentColor"/><rect x="24.5" y="4.5" width="2" height="4" rx="1" fill="currentColor" opacity=".45"/></svg></span></div>`;
+const compact=(x,w,go='home')=>`<button class="ncompact" data-a="openApp" data-v="${go}"><span class="nlogo">${LOGO_W}</span><b>${x}</b><span class="nt">${w||''}</span></button>`;
+const dosaDate=()=>(allUpcoming().find(u=>u[2]==='dosa')||[TODAY])[0];
 function lockCard(){
-  const t=S.story,n=t.step;
-  if(n===0)return `<div class="ncompact"><span class="nlogo">${LOGO_W}</span><b>Lunch is being served.</b><span class="nt">11:30 AM to 3 PM</span></div>`;
-  if(n===1)return `<div class="ncard" role="status">${nHead()}<div class="bioline"><span class="biotick">${ico('check')}</span><div><h3>Biometric done. Enjoy your lunch!</h3><p class="small">Entry confirmed at 12:40 PM. We'll ask how it was in about 40 minutes.</p></div></div><p class="small muted">Only your entry time is shared with BITEBACK, never your fingerprint.</p></div><button class="glasspill" id="skip40" data-a="storyGo" data-v="2">Skip ahead 40 minutes ${ico('chevron')}</button>`;
-  if(n===2)return `<div class="ncard">${nHead()}<h3>How was lunch?</h3><p class="small muted">Paneer Butter Masala, Dal Tadka, Jeera Rice and more</p><div class="lockstars" role="group" aria-label="Rate lunch">${[1,2,3,4,5].map(i=>`<button id="lock${i}" data-a="lockStar" data-v="${i}" aria-label="${i} ${i===1?'star':'stars'}, ${STAR_LABEL[i]}">${star(false)}</button>`).join('')}</div><button class="nlink" data-a="lockNot">Not now</button></div>`;
-  if(n===3){const low=t.stars<=2;return `<div class="ncard">${nHead()}<div class="rated">${stars(t.stars)}<span class="small">${STAR_LABEL[t.stars]} · Saved</span></div><h3>${low?'Which dish let it down?':'Which dish stood out?'}</h3><div class="chips">${MENU.Lunch.map(d=>`<button class="chip" id="pick-${d}" data-a="lockDish" data-v="${d}">${D[d].name}</button>`).join('')}</div><button class="nlink" data-a="lockSkip">Skip</button></div>`}
-  if(n===4){const v=votes(),l=LIVE();return `<div class="ncard">${nHead()}<h3>You and ${l.rated-1} others rated lunch.</h3><p>${D[v[0][0]].name.replace('Paneer Butter Masala','Paneer')} is winning today.</p><div class="minivote">${v.slice(0,3).map(([d,c])=>`<div class="barrow"><span>${D[d].name}</span><span class="track"><span style="width:${c/v[0][1]*100}%"></span></span><span class="v">${c}</span></div>`).join('')}</div><button class="secondary" data-a="openResults">See today's results</button></div>`}
-  if(n===5)return `<div class="ncard">${nHead('8:10 AM')}<span class="eyebrow" style="color:var(--cobalt)">You said, the mess changed it</span><h3>Students said the poha needed more flavour.</h3><p>The mess changed it today. Tell us if it's better.</p></div>`;
-  return `<div class="ncard hl">${nHead('7:00 PM')}<span class="eyebrow" style="color:var(--cobalt)">Your favourite is coming back</span><h3>Masala Dosa, which you loved, is back tomorrow.</h3><p class="small">Monday, 24 November · Breakfast · You rated it 4/5</p><button class="primary" data-a="openPayoff">See the menu</button></div>`;
+  const t=S.story,n=t.step,tm=t.times,dishes=MENU[SMEAL].map(d=>D[d].name);
+  if(n===1)return `<div class="ncard tap" data-a="openApp" data-v="home">${nHead()}<div class="bioline"><span class="biotick">${ico('check')}</span><div><h3>You're checked in for ${ml}.</h3><p class="small">Biometric done at ${tm.c}. Enjoy your meal! We'll ask how it was after you eat.</p></div></div><p class="small muted">Only your check-in time is shared with BITEBACK, never your fingerprint.</p></div>`;
+  if(n===2)return `<div class="ncard">${nHead()}<h3>How was ${ml}?</h3><p class="small muted">${dishes.slice(0,3).join(', ')}${dishes.length>3?' and more':''}</p><div class="lockstars" role="group" aria-label="Rate ${ml}">${[1,2,3,4,5].map(i=>`<button id="lock${i}" data-a="lockStar" data-v="${i}" aria-label="${i} ${i===1?'star':'stars'}, ${STAR_LABEL[i]}">${star(false)}</button>`).join('')}</div><button class="nlink" data-a="lockNot">Not now</button></div>`;
+  if(n===3){const low=t.stars<=2;return `<div class="ncard">${nHead()}<div class="rated">${stars(t.stars)}<span class="small">${STAR_LABEL[t.stars]} · Saved</span></div><h3>${low?'Which dish let it down?':'Which dish stood out?'}</h3><div class="chips">${MENU[SMEAL].map(d=>`<button class="chip" id="pick-${d}" data-a="lockDish" data-v="${d}">${D[d].name}</button>`).join('')}</div><button class="nlink" data-a="lockSkip">Skip</button></div>`}
+  if(n===4){if(!t.stars)return '';const v=votes(),l=LIVE();return `<div class="ncard tap" data-a="openApp" data-v="feedback">${nHead()}<h3>You and ${l.rated-1} others rated ${ml}.</h3><p>${D[v[0][0]].name} is winning today.</p><div class="minivote">${v.slice(0,3).map(([d,c])=>`<div class="barrow"><span>${D[d].name}</span><span class="track"><span style="width:${c/v[0][1]*100}%"></span></span><span class="v">${c}</span></div>`).join('')}</div><button class="secondary" data-a="openApp" data-v="feedback">See today's results</button></div>`}
+  if(n===5)return `<div class="ncard tap" data-a="openApp" data-v="feedback">${nHead()}<span class="eyebrow" style="color:var(--cobalt)">You said, the mess changed it</span><h3>Students said the poha needed more flavour.</h3><p>The mess has updated the recipe for this week. Tell us if it's better.</p></div>`;
+  if(n===6){const dd=dosaDate();return `<div class="ncard hl tap" data-a="openPayoff">${nHead()}<span class="eyebrow" style="color:var(--cobalt)">Your favourite is coming back</span><h3>Masala Dosa, which you loved, is back on ${DAYN[dt(dd).getUTCDay()]}.</h3><p class="small">${fmt(dd)} · Breakfast · You rated it 4/5</p><button class="primary" data-a="openPayoff">See the menu</button></div>`}
+  return '';
+}
+function earlier(){
+  const t=S.story,n=t.step,tm=t.times,o=LIVE().rated-1,list=[];
+  if(n>=6)list.push(compact('Students said the poha needed more flavour.',tm.i,'feedback'));
+  if(n>=5)list.push(t.stars?compact(`You and ${o} others rated ${ml}.`,tm.r,'feedback'):compact(`How was ${ml}? Skipped for today.`,tm.p));
+  if(n===4&&!t.stars)list.push(compact(`How was ${ml}? Skipped for today.`,tm.p));
+  if(n>=2)list.push(compact(`You're checked in for ${ml}. Enjoy your meal!`,tm.c));
+  return list.length?`<div class="earlierlbl">${n===4&&!t.stars?'Notifications':'Earlier'}</div>${list.join('')}`:'';
 }
 function lockPhone(){
-  const n=S.story.step,[time,date]=LOCK_TIME[n];
-  const ok=ui.scanOk,kiosk=n===0?`<div class="kioskwrap"><div class="kiosk" role="dialog" aria-label="Simulated mess entrance"><span class="eyebrow" style="color:var(--muted)">Simulated mess entrance</span><div class="kdev"><div class="kscreen ${ok?'ok':''}">${ok?'<b>Welcome, Hitanshi</b><span>Entry recorded · 12:40 PM</span>':'<b>Lunch</b><span>Place your finger to enter</span>'}</div><button class="fp ${ok?'ok':''}" id="scanBtn" data-a="lockScan" aria-label="Scan fingerprint to enter the mess">${ico(ok?'check':'finger')}</button></div><h3>${ok?'You\'re in':'Tap the scanner to enter'}</h3><span class="small muted">This is the scan students already do before getting a plate.</span></div></div>`:'';
-  return `<div class="phone lock"><div class="wall"></div>${SB()}<div class="lockbody"><div class="lockclock"><span>${date}</span><b>${time}</b></div><div class="lockstack" aria-live="polite">${lockCard()}${earlier(n)}</div><div class="lockfoot"><span class="lockbtn">${ico('torch')}</span><p class="conceptnote">Course concept. Not an official My Flame screen.</p><span class="lockbtn">${ico('camera')}</span></div><div class="homebar"></div></div>${kiosk}</div>`;
+  return `<div class="phone lock"><div class="wall"></div>${SB(false)}<div class="lockbody"><div class="lockclock"><span>${lockDate()}</span><b data-clock="1">${clock()}</b></div><div class="lockstack" aria-live="polite">${lockCard()}${earlier()}</div><div class="lockfoot"><span class="lockbtn">${ico('torch')}</span><span class="lockbtn">${ico('camera')}</span></div><button class="homebar" data-a="openApp" data-v="home" aria-label="Open BITEBACK"></button></div></div>`;
 }
-function student(){
-  const n=S.story.step;
-  return `<div class="stage">${n>=7?appPhone():lockPhone()}</div>`;
-}
+function student(){return `<div class="stage">${ui.view==='app'?appPhone():lockPhone()}</div>`}
 function dResponse(){
-  const l=LIVE(),rate=l.rated/l.prompted,v=votes(),fun=[['Scanned in',l.scan],['Sent a prompt',l.prompted],['Rated lunch',l.rated],['Named a dish',l.named]],week=[['Mon','Breakfast',.38],['Tue','Lunch',.47],['Wed','Dinner',.41],['Thu','Lunch',rate]];
-  return `<div class="dhead"><div><h1>Response</h1><p class="muted">Thursday lunch · Prompts sent 40 minutes after each student's entry</p></div><span class="samplepill">Illustrative sample data</span></div>
+  const l=LIVE(),rate=l.rated/l.prompted,v=votes(),fun=[['Scanned in',l.scan],['Sent a prompt',l.prompted],[`Rated ${ml}`,l.rated],['Named a dish',l.named]],week=[['Mon','Breakfast',.38],['Tue','Lunch',.47],['Wed','Dinner',.41],['Thu','Lunch',rate]];
+  return `<div class="dhead"><div><h1>Response</h1><p class="muted">${DAYN[dt(TODAY).getUTCDay()]} ${ml} · Prompts sent 40 minutes after each student's check-in</p></div><span class="samplepill">Illustrative sample data</span></div>
   <div class="kpis"><div class="kpi lead"><small>Response rate</small><span class="num" id="respRate">${(rate*100).toFixed(1)}%</span><small>Of students prompted</small></div><div class="kpi"><small>Ate at the mess</small><span class="num">${l.scan}</span><small>From entry records</small></div><div class="kpi"><small>Lunch ratings</small><span class="num" id="respRated">${l.rated}</span><small>Anonymous and combined</small></div><div class="kpi"><small>Prompts paused</small><span class="num">${l.paused}</span><small>After 3 ignored prompts</small></div></div>
   <div class="g2"><div class="panel"><h2>From entry to rating</h2>${fun.map(([a,b])=>hbar(a,b,l.scan,b)).join('')}</div><div class="panel"><h2>Today's standout dishes</h2><p class="small muted">Students who named this dish after a 3 to 5 star meal</p>${v.map(([d,c])=>hbar(D[d].name,c,v[0][1],c)).join('')}</div>
   <div class="panel"><h2>Response rate this week</h2><p class="small muted">One prompt per student per day, rotating across meals</p>${week.map(([d,m,r])=>hbar(`${d} · ${m}`,r,1,pct(r))).join('')}</div><div class="panel"><h2>Privacy by design</h2><p>The prompt system uses one fact from the mess entry system: the time a student entered.</p><p class="muted">Fingerprint data never reaches BITEBACK, and this dashboard shows no names, IDs or individual ratings.</p></div></div>`;
 }
-function clearDish(){const t=S.story;if(t.dish){const k=`${TODAY}|Lunch|${t.dish}`;S.records=S.records.filter(r=>r.key!==k);if(t.favAdded)S.favs=S.favs.filter(f=>f!==t.dish)}t.dish=null;t.skipDish=false;t.favAdded=false}
-function commitDish(d){const t=S.story,k=`${TODAY}|Lunch|${d}`,a=t.stars>=4?'yes':t.stars<=2?'no':null;if(!S.records.some(r=>r.key===k))S.records.push({key:k,d,date:TODAY,meal:'Lunch',s:t.stars,t:[],a,c:''});t.dish=d;if(t.stars===5&&!isFav(d)&&!S.removed.includes(d)){S.favs.push(d);t.favAdded=true}}
-function setStep(n){
-  const t=S.story;
-  if(n<=3)clearDish();
-  if(n<=2){t.stars=0;t.dismissed=false}
-  if(n===3||n===4)t.dismissed=false;
-  if(n===0)S.records=S.records.filter(r=>!(r.date===TODAY&&r.meal==='Lunch'));
-  if(n>=3&&!t.stars&&!t.dismissed)t.stars=5;
-  if(n>=4&&!t.dish&&!t.skipDish&&!t.dismissed)commitDish('pbm');
-  t.step=n;ui.stack=[{s:'home'}];ui.mode=n===8?'dashboard':'student';if(n===8)ui.dv='response';
-  try{history.replaceState(null,'','#'+ui.mode)}catch(e){}
-  save();render(false);
+function clearDish(){const t=S.story;if(t.dish){const k=`${TODAY}|${SMEAL}|${t.dish}`;S.records=S.records.filter(r=>r.key!==k);if(t.favAdded)S.favs=S.favs.filter(f=>f!==t.dish)}t.dish=null;t.skipDish=false;t.favAdded=false}
+function commitDish(d){const t=S.story,k=`${TODAY}|${SMEAL}|${d}`,a=t.stars>=4?'yes':t.stars<=2?'no':null;if(!S.records.some(r=>r.key===k))S.records.push({key:k,d,date:TODAY,meal:SMEAL,s:t.stars,t:[],a,c:''});t.dish=d;if(t.stars===5&&!isFav(d)&&!S.removed.includes(d)){S.favs.push(d);t.favAdded=true}}
+let tl;
+function schedule(){clearTimeout(tl);const n=S.story.step,d={0:3500+Math.random()*3500,1:16000,4:11000,5:11000}[n];if(d!=null)tl=setTimeout(()=>advance(n+1),d)}
+function advance(n){
+  const t=S.story,now=clockAP();
+  if(n===1)t.times.c=now;if(n===2)t.times.p=now;if(n===5)t.times.i=now;
+  t.step=n;
+  const b={1:`You're checked in for ${ml}. Enjoy your meal!`,2:`How was ${ml}? Tap to rate.`,5:'Students said the poha needed more flavour.',6:'Masala Dosa, which you loved, is back soon.'}[n];
+  if(b&&ui.view==='app'){ui.banner=b;clearTimeout(ui.bt);ui.bt=setTimeout(()=>{ui.banner=null;if(ui.mode==='student')render()},6000)}
+  save();if(ui.mode==='student')render();schedule();
 }
 
 /* ---------- Render + actions ---------- */
@@ -715,12 +719,9 @@ const root=document.getElementById('root');let toastT;
 function render(keep=true){
   const sc=root.querySelector('.scroll,#dmain'),top=keep&&sc?sc.scrollTop:0,fid=document.activeElement&&document.activeElement.id;
   root.innerHTML=ui.mode==='student'?student():dashboard();
-  document.getElementById('modeSeg').innerHTML=[['student','Student app'],['dashboard','Mess dashboard']].map(([m,l])=>`<button data-a="mode" data-v="${m}" aria-pressed="${ui.mode===m}">${l}</button>`).join('');
-  const sn=S.story.step;
-  document.getElementById('nextBtn').textContent=sn>=8?'Replay':'Next';
-  document.getElementById('prevBtn').disabled=sn===0;
-  document.getElementById('stepLbl').innerHTML=`<b>${sn+1}/9</b><span class="nm"> · ${STORY[sn][0]}</span>`;
-  document.querySelectorAll('#modeSeg button').forEach(b=>{b.innerHTML=b.dataset.v==='student'?'Student<span class="lg"> app</span>':'Mess<span class="lg"> dashboard</span>'});
+  document.getElementById('modeSeg').innerHTML=[['student','Student phone'],['dashboard','Mess dashboard']].map(([m,l])=>`<button data-a="mode" data-v="${m}" aria-pressed="${ui.mode===m}">${l}</button>`).join('');
+  document.querySelector('.topbar').hidden=ui.mode==='student';
+  document.querySelectorAll('#modeSeg button').forEach(b=>{b.innerHTML=b.dataset.v==='student'?'Student<span class="lg"> phone</span>':'Mess<span class="lg"> dashboard</span>'});
   const n=root.querySelector('.scroll,#dmain');if(n)n.scrollTop=top;
   if(fid){const f=document.getElementById(fid);if(f&&root.contains(f))f.focus({preventScroll:true})}
   document.getElementById('tip').hidden=true;
@@ -785,17 +786,16 @@ const tip=document.getElementById('tip');
 document.addEventListener('mousemove',e=>{const t=e.target.closest&&e.target.closest('[data-tip]');if(!t){tip.hidden=true;return}tip.textContent=t.dataset.tip;tip.hidden=false;tip.style.left=Math.min(innerWidth-tip.offsetWidth-8,e.clientX+12)+'px';tip.style.top=Math.max(6,e.clientY-34)+'px'});
 window.addEventListener('hashchange',()=>{const m=location.hash==='#dashboard'?'dashboard':'student';if(m!==ui.mode){ui.mode=m;render(false)}});
 Object.assign(A,{
-  storyGo:v=>setStep(+v),
-  storyPrev:()=>{if(S.story.step>0)setStep(S.story.step-1)},
-  lockScan:()=>{if(ui.scanOk)return;ui.scanOk=true;render(false);setTimeout(()=>{ui.scanOk=false;if(S.story.step===0)setStep(1)},1000)},
-  storyNext:()=>S.story.step>=8?A.storyReset():setStep(S.story.step+1),
-  storyReset:()=>{S=SEED();ui.loop=0;ui.draft=null;setStep(0)},
-  lockStar:v=>{S.story.stars=+v;S.story.step=3;save();render(false)},
-  lockDish:v=>{commitDish(v);S.story.step=4;save();render(false)},
-  lockSkip:()=>{S.story.skipDish=true;S.story.step=4;save();render(false)},
-  lockNot:()=>{S.story.dismissed=true;setStep(5)},
-  openResults:()=>{setStep(7);ui.stack=[{s:'feedback'}];render(false)},
-  openPayoff:()=>{setStep(7);ui.stack=[{s:'home'},{s:'dish',d:'dosa',date:'2025-11-24',meal:'Breakfast'}];render(false)},
+  lockStar:v=>{const t=S.story;t.stars=+v;t.times.r=clockAP();t.step=3;save();render(false)},
+  lockDish:v=>{commitDish(v);S.story.step=4;save();render(false);schedule()},
+  lockSkip:()=>{S.story.skipDish=true;S.story.step=4;save();render(false);schedule()},
+  lockNot:()=>{S.story.dismissed=true;S.story.step=4;save();render(false);schedule()},
+  openApp:v=>{ui.view='app';ui.stack=v==='feedback'?[{s:'feedback'}]:[{s:'home'}];render(false)},
+  openPayoff:()=>{ui.view='app';ui.stack=[{s:'home'},{s:'dish',d:'dosa',date:dosaDate(),meal:'Breakfast'}];render(false)},
+  toLock:()=>{ui.view='lock';ui.banner=null;render(false)},
 });
+ui.view='lock';
+setInterval(()=>{const c=clock();document.querySelectorAll('[data-clock="1"]').forEach(e=>{if(e.textContent!==c)e.textContent=c})},1000);
+schedule();
 render(false);
 </script>
