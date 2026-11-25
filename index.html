@@ -681,8 +681,8 @@ function lockPhone(){
   return `<div class="phone lock"><div class="wall"></div>${SB()}<div class="lockbody"><div class="lockclock"><span>${date}</span><b>${time}</b></div><div class="lockstack" aria-live="polite">${lockCard()}${earlier(n)}</div><div class="lockfoot"><span class="lockbtn">${ico('torch')}</span><p class="conceptnote">Course concept. Not an official My Flame screen.</p><span class="lockbtn">${ico('camera')}</span></div><div class="homebar"></div></div>${kiosk}</div>`;
 }
 function student(){
-  const n=S.story.step,s=STORY[n];
-  return `<div class="stage"><aside class="guide story"><div><h2>Rate lunch without opening an app.</h2></div><ol class="steps">${STORY.map((x,i)=>`<li><button data-a="storyGo" data-v="${i}" ${i===n?'aria-current="step"':''} class="${i<n?'past':''}"><span class="stepn">${i+1}</span>${x[0]}</button></li>`).join('')}</ol><div class="stepnote"><b>${s[1]}</b><p class="small">${s[2]}</p></div><button class="link" data-a="storyReset">Replay from the start</button></aside>${n>=7?appPhone():lockPhone()}</div>`;
+  const n=S.story.step;
+  return `<div class="stage">${n>=7?appPhone():lockPhone()}</div>`;
 }
 function dResponse(){
   const l=LIVE(),rate=l.rated/l.prompted,v=votes(),fun=[['Scanned in',l.scan],['Sent a prompt',l.prompted],['Rated lunch',l.rated],['Named a dish',l.named]],week=[['Mon','Breakfast',.38],['Tue','Lunch',.47],['Wed','Dinner',.41],['Thu','Lunch',rate]];
